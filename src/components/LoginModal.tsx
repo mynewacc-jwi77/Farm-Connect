@@ -269,8 +269,16 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <CardHeader className="text-center">
+      <Card className="w-full max-w-md max-h-[90vh] overflow-y-auto relative">
+        <Button 
+          variant="ghost" 
+          size="sm"
+          className="absolute top-3 right-3 z-10 h-8 w-8 p-0 rounded-full"
+          onClick={onClose}
+        >
+          ✕
+        </Button>
+        <CardHeader className="text-center pt-8">
           <CardTitle className="flex items-center justify-center space-x-2">
             <Sprout className="h-6 w-6 text-primary" />
             <span>Farmer Connect</span>
@@ -278,14 +286,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           <CardDescription>
             Join our agricultural community platform
           </CardDescription>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="absolute top-2 right-2"
-            onClick={onClose}
-          >
-            ✕
-          </Button>
         </CardHeader>
 
         <CardContent>
