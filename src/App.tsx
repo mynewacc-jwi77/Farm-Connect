@@ -25,8 +25,9 @@ const App = () => {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
+        const swUrl = `${window.location.origin}/sw.js`;
         navigator.serviceWorker
-          .register('/sw.js')
+          .register(swUrl)
           .then((registration) => {
             console.log('SW registered: ', registration);
           })

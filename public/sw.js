@@ -1,10 +1,13 @@
-const CACHE_NAME = 'farmer-connect-v1';
+const CACHE_NAME = 'farmer-connect-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/src/main.tsx',
-  '/src/index.css',
-  '/manifest.json'
+  '/assets/index-*.js', // Vite bundles JS with content hash
+  '/assets/index-*.css', // Vite bundles CSS with content hash
+  '/manifest.json',
+  '/favicon.png',
+  '/icon-192.png',
+  '/icon-512.png'
 ];
 
 // Install event - cache static assets
@@ -33,26 +36,47 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
+  // Skip cross-origin requests
+  if (!event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
+  // Handle navigation requests differently
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match('/index.html');
+      })
+    );
+    return;
+  }
+
+  // For asset requests, use cache-first strategy
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request)
-          .then((fetchResponse) => {
-            // Cache successful responses
-            if (fetchResponse.status === 200 && event.request.method === 'GET') {
-              const responseClone = fetchResponse.clone();
-              caches.open(CACHE_NAME)
-                .then((cache) => cache.put(event.request, responseClone));
-            }
-            return fetchResponse;
-          });
-      })
-      .catch(() => {
-        // Offline fallback for navigation requests
-        if (event.request.mode === 'navigate') {
-          return caches.match('/');
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      return fetch(event.request).then((response) => {
+        // Don't cache non-successful responses
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+          return response;
         }
-      })
+
+        // Cache successful responses
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+
+        return response;
+      }).catch(() => {
+        // Return default offline page for HTML requests
+        if (event.request.headers.get('accept').includes('text/html')) {
+          return caches.match('/index.html');
+        }
+      });
+    })
   );
 });
