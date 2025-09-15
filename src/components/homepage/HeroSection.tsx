@@ -16,6 +16,7 @@ import {
   User
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import heroImage from "@/assets/hero-farm.jpg";
 
 export default function HeroSection() {
@@ -24,6 +25,7 @@ export default function HeroSection() {
   const [currentLanguage, setCurrentLanguage] = useState("English");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
 
   const languages = ["English", "Hindi", "Tamil", "Telugu", "Bengali", "Marathi"];
 
@@ -113,22 +115,24 @@ export default function HeroSection() {
                 <Brain className="w-5 h-5 mr-2" />
                 AI Disease Detection
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-2 border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                onClick={() => {
-                  // Trigger login modal - find the app component
-                  const appRoot = document.getElementById('root');
-                  if (appRoot) {
-                    const event = new CustomEvent('openLoginModal');
-                    appRoot.dispatchEvent(event);
-                  }
-                }}
-              >
-                <User className="w-5 h-5 mr-2" />
-                Get Started Free
-              </Button>
+              {!user && (
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  className="border-2 border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                  onClick={() => {
+                    // Trigger login modal - find the app component
+                    const appRoot = document.getElementById('root');
+                    if (appRoot) {
+                      const event = new CustomEvent('openLoginModal');
+                      appRoot.dispatchEvent(event);
+                    }
+                  }}
+                >
+                  <User className="w-5 h-5 mr-2" />
+                  Get Started Free
+                </Button>
+              )}
             </div>
 
             {/* Stats */}

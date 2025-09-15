@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   Camera, 
   BarChart3, 
@@ -69,6 +70,7 @@ const quickActions = [
 
 export default function QuickActions() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleActionClick = (route: string, title: string) => {
     if (route === "/mobile-app") {
@@ -150,17 +152,19 @@ export default function QuickActions() {
         </div>
 
         {/* Call to Action */}
-        <div className="text-center mt-12">
-          <Button 
-            size="lg" 
-            variant="hero" 
-            onClick={() => navigate("/disease-detection")}
-            className="group"
-          >
-            Get Started Now
-            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-          </Button>
-        </div>
+        {!user && (
+          <div className="text-center mt-12">
+            <Button 
+              size="lg" 
+              variant="hero" 
+              onClick={() => navigate("/disease-detection")}
+              className="group"
+            >
+              Get Started Now
+              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );
