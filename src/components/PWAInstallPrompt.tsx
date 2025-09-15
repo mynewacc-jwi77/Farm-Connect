@@ -14,8 +14,7 @@ export default function PWAInstallPrompt() {
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
-      // Don't prevent default - this was causing the banner not to show
-      // e.preventDefault();
+      e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setShowPrompt(true);
     };

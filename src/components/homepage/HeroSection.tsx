@@ -107,7 +107,7 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
                 size="lg"
-                className="bg-white text-primary hover:bg-white/90 shadow-xl transform hover:scale-105 transition-all duration-200"
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-xl transform hover:scale-105 transition-all duration-200"
                 onClick={() => navigate("/disease-detection")}
               >
                 <Brain className="w-5 h-5 mr-2" />
@@ -116,7 +116,7 @@ export default function HeroSection() {
               <Button 
                 variant="outline" 
                 size="lg"
-                className="border-2 border-white text-white bg-white/10 hover:bg-white/10"
+                className="border-2 border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                 onClick={() => {
                   // Trigger login modal - find the app component
                   const appRoot = document.getElementById('root');
@@ -148,26 +148,20 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Hero Image - Right side content */}
+          {/* Hero Image */}
           <div className="relative">
-            <div className="relative z-10 bg-white/10 backdrop-blur-sm p-6 rounded-2xl overflow-hidden shadow-2xl border border-white/20">
-              <div className="space-y-6">
-                <h3 className="text-2xl font-semibold text-white">Try Disease Detection</h3>
-                <p className="text-white/80">Upload a photo of your crop to get instant AI-powered disease identification and treatment recommendations.</p>
-                <Button 
-                  size="lg"
-                  className="bg-white text-primary hover:bg-white/90 shadow-xl w-full"
-                  onClick={() => navigate("/disease-detection")}
-                >
-                  <Brain className="w-5 h-5 mr-2" />
-                  Start Detection
-                </Button>
-              </div>
+            <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
+              <img 
+                src={heroImage} 
+                alt="Smart farming with AI technology" 
+                className="w-full h-auto object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
             
             {/* Floating elements */}
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/20 rounded-full animate-bounce delay-300" />
-            <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-white/20 rounded-full animate-bounce delay-700" />
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-green-400/30 rounded-full animate-bounce delay-300" />
+            <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-blue-400/30 rounded-full animate-bounce delay-700" />
           </div>
         </div>
 

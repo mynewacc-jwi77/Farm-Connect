@@ -83,33 +83,12 @@ export default function SmartWeatherDashboard() {
         description: `Weather data loaded for ${data.location}`,
       });
     } catch (locationError) {
-      // Provide more specific error messages based on the error type
-      let errorMessage = "Using sample weather data. ";
-      
-      if (locationError instanceof GeolocationPositionError) {
-        switch(locationError.code) {
-          case GeolocationPositionError.PERMISSION_DENIED:
-            errorMessage += "Location access was denied. Please enable location services in your browser settings.";
-            break;
-          case GeolocationPositionError.POSITION_UNAVAILABLE:
-            errorMessage += "Location information is unavailable. Please try again later.";
-            break;
-          case GeolocationPositionError.TIMEOUT:
-            errorMessage += "Location request timed out. Please check your connection and try again.";
-            break;
-          default:
-            errorMessage += "Please enable location services for real-time data.";
-        }
-      } else {
-        errorMessage += "Please enable location services for real-time data.";
-      }
-      
       console.warn("Could not get location, using mock data:", locationError);
       // Fallback to mock data for development
       const mockData = getMockWeatherData();
       setWeatherData(mockData);
       setLocation(mockData.location);
-      setError(errorMessage);
+      setError("Using sample weather data. Please enable location services for real-time data.");
     } finally {
       setWeatherLoading(false);
     }

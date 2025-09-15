@@ -157,7 +157,7 @@ class GeminiAIService {
         language,
         category
       };
-    } catch (error: any) {
+    } catch (error) {
       console.error('Gemini API error:', error);
       
       // Fallback responses in different languages
@@ -167,27 +167,6 @@ class GeminiAIService {
         malayalam: 'ക്ഷമിക്കണം, എനിക്ക് ഇപ്പോൾ നിങ്ങളെ സഹായിക്കാൻ കഴിയില്ല. ദയവായി പിന്നീട് വീണ്ടും ശ്രമിക്കുക.',
         english: 'Sorry, I cannot help you right now. Please try again later.'
       };
-      
-      // Quota exceeded error messages in different languages
-      const quotaExceededResponses = {
-        hindi: 'API कोटा समाप्त हो गया है। कृपया बाद में पुनः प्रयास करें या अपनी API कुंजी का उपयोग करें।',
-        marathi: 'API कोटा संपला आहे. कृपया नंतर पुन्हा प्रयत्न करा किंवा आपली स्वतःची API की वापरा.',
-        malayalam: 'API കോട്ട കഴിഞ്ഞു. ദയവായി പിന്നീട് വീണ്ടും ശ്രമിക്കുക അല്ലെങ്കിൽ നിങ്ങളുടെ സ്വന്തം API കീ ഉപയോഗിക്കുക.',
-        english: 'API quota exceeded. Please try again later or use your own API key.'
-      };
-      
-      // Check for quota exceeded errors
-      if (error.message?.includes('quota') || 
-          error.message?.includes('rate limit') || 
-          error.message?.includes('429') ||
-          error.message?.includes('resource exhausted')) {
-        return {
-          query,
-          response: quotaExceededResponses[language as keyof typeof quotaExceededResponses] || quotaExceededResponses.english,
-          language,
-          category: 'general'
-        };
-      }
 
       return {
         query,
@@ -214,17 +193,8 @@ class GeminiAIService {
       const result = await this.getModel().generateContent(prompt);
       const response = await result.response;
       return response.text().trim();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Weather advice error:', error);
-      
-      // Check for quota exceeded errors
-      if (error.message?.includes('quota') || 
-          error.message?.includes('rate limit') || 
-          error.message?.includes('429') ||
-          error.message?.includes('resource exhausted')) {
-        return 'API quota exceeded. Please try again later or use your own API key. In the meantime, check local weather forecasts for agricultural planning.';
-      }
-      
       return 'Unable to fetch weather advice at the moment. Please check local weather conditions and plan accordingly.';
     }
   }
@@ -245,25 +215,8 @@ class GeminiAIService {
       const text = response.text().trim();
       
       return text.split('\n').filter(line => line.trim()).slice(0, 7);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Crop recommendations error:', error);
-      
-      // Check for quota exceeded errors
-      if (error.message?.includes('quota') || 
-          error.message?.includes('rate limit') || 
-          error.message?.includes('429') ||
-          error.message?.includes('resource exhausted')) {
-        return [
-          'API quota exceeded. Please try again later or use your own API key.',
-          'Common crops for this season include:',
-          'Wheat - staple crop with good market demand',
-          'Rice - suitable for most regions with adequate water',
-          'Sugarcane - high value commercial crop',
-          'Cotton - good for drier regions',
-          'Maize - versatile crop with multiple uses'
-        ];
-      }
-      
       return ['Wheat', 'Rice', 'Sugarcane', 'Cotton', 'Maize'];
     }
   }
@@ -287,24 +240,8 @@ export const getAIInsights = async (prompt: string): Promise<string[]> => {
       .filter(line => line.length > 10); // Filter out very short lines
     
     return insights.slice(0, 6); // Return up to 6 insights
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error getting AI insights:', error);
-    
-    // Check for quota exceeded errors
-    if (error.message?.includes('quota') || 
-        error.message?.includes('rate limit') || 
-        error.message?.includes('429') ||
-        error.message?.includes('resource exhausted')) {
-      // Return fallback insights for quota errors
-      return [
-        'API quota exceeded. Please try again later or use your own API key.',
-        'Based on general agricultural knowledge, monitor your crops regularly for signs of disease or stress.',
-        'Ensure proper irrigation based on current weather conditions.',
-        'Consider crop rotation to prevent soil depletion and reduce pest problems.',
-        'Apply fertilizers according to soil test recommendations and crop requirements.'
-      ];
-    }
-    
     throw new Error('Failed to generate AI insights');
   }
 };
